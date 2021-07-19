@@ -1,2 +1,3 @@
 # flush_hosts_github
-nodejs一键快速更新github最新的cdn地址
+nodejs脚本一键快速更新github最新的cdn地址
+
