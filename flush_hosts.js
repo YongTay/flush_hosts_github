@@ -7,7 +7,11 @@ const os = require('os')
 
 let url = 'https://gitee.com/ineo6/hosts/raw/master/hosts'
 let path = '/etc/hosts'
-
+if(os.platform() === 'darwin') {
+  path = '/etc/hosts'
+} else {
+  path = 'C:/Windows/System32/drivers/etc/hosts'
+}
 https.get(url, res => {
   let data = []
   console.log('开始请求网络数据 => ' + url);
