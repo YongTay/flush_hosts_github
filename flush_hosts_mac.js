@@ -3,7 +3,6 @@
 const fs = require('fs')
 const https = require('https')
 const exec = require('child_process').exec
-const os = require('os')
 
 let url = 'https://gitee.com/ineo6/hosts/raw/master/hosts'
 let path = '/etc/hosts'
@@ -55,15 +54,6 @@ function changeTarget(data, newVal) {
  * dns刷新
  */
 function flushDns() {
-  if(os.platform() === 'darwin') {
-    flushDns_mac()
-  } else {
-    flushDns_win();
-  }
-}
-
-
-function flushDns_mac() {
   console.log('开始执行DNS刷新');
   exec('sudo killall -HUP mDNSResponder',  (error) => {
     if (error) {
@@ -74,18 +64,3 @@ function flushDns_mac() {
   });
 }
 
-/**
- * dns刷新
- */
- function flushDns_win() {
-  console.log('开始执行DNS刷新');
-  exec('chcp 65001')
-  exec('ipconfig /flushdns',  (error) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-    console.log('DNS刷新成功');
-    console.log('hosts文件更新完成');
-  })
-}

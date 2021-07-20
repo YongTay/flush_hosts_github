@@ -3,10 +3,9 @@
 const fs = require('fs')
 const https = require('https')
 const exec = require('child_process').exec
-const os = require('os')
 
 let url = 'https://gitee.com/ineo6/hosts/raw/master/hosts'
-let path = '/etc/hosts'
+let path = 'C:/Windows/System32/drivers/etc/hosts'
 
 https.get(url, res => {
   let data = []
@@ -14,6 +13,7 @@ https.get(url, res => {
   res.on('data', chunk => {
     data.push(chunk)
   });
+
   res.on('end', () => {
     let newVal = data.join('').toString()
     console.log('网络请求数据完成');
@@ -27,7 +27,7 @@ https.get(url, res => {
       console.log('开始写入数据');
       fs.writeFileSync(path, newText, {flag: 'w'})
       console.log('文件写入完成');
-      flushDns();
+      flushDns()
     } catch(e) {
       console.error(e)
     }
@@ -54,30 +54,7 @@ function changeTarget(data, newVal) {
 /**
  * dns刷新
  */
-function flushDns() {
-  if(os.platform() === 'darwin') {
-    flushDns_mac()
-  } else {
-    flushDns_win();
-  }
-}
-
-
-function flushDns_mac() {
-  console.log('开始执行DNS刷新');
-  exec('sudo killall -HUP mDNSResponder',  (error) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-  console.log('DNS刷新成功');
-  });
-}
-
-/**
- * dns刷新
- */
- function flushDns_win() {
+ function flushDns() {
   console.log('开始执行DNS刷新');
   exec('chcp 65001')
   exec('ipconfig /flushdns',  (error) => {
@@ -89,3 +66,5 @@ function flushDns_mac() {
     console.log('hosts文件更新完成');
   })
 }
+
+
