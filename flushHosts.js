@@ -6,10 +6,14 @@ const os = require('os')
 const {resolve} = require('path')
 
 let path = '/etc/hosts'
-if(os.platform() === 'darwin') {
+if(isMac()) {
   path = '/etc/hosts'
 } else {
   path = 'C:/Windows/System32/drivers/etc/hosts'
+}
+
+function isMac() {
+  return os.platform() === 'darwin'
 }
 
 function doFlushHost(newVal) {
@@ -56,7 +60,7 @@ function changeTarget(data, newVal) {
  * dns刷新
  */
 function flushDns() {
-  if(os.platform() === 'darwin') {
+  if(isMac()) {
     flushDns_mac()
   } else {
     flushDns_win();
@@ -91,4 +95,7 @@ function flushDns_mac() {
   })
 }
 
-module.exports = {doFlushHost}
+module.exports = {
+  doFlushHost,
+  isMac
+}

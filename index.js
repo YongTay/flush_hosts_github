@@ -2,9 +2,11 @@
 const axios = require('axios')
 const fs = require('fs')
 const {resolve} = require('path')
-const {doFlushHost} = require('./flushHosts')
+const {doFlushHost, isMac} = require('./flushHosts')
 // 增加阀值
 const MIN = 100
+// 平台判断
+const ISMAC = isMac()
 
 function queryWebSite(site) {
   let url = 'https://www.wepcc.com/'
@@ -84,9 +86,10 @@ function sort(arr) {
 
 
 async function queryConfigWebSite() {
+  let lineSep = ISMAC ? '\n' : '\r\n'
   let configFilePath = resolve(__dirname, 'config.txt')
   let text = fs.readFileSync(configFilePath, {flag: 'r'})
-  let sites = text.toString().split('\r\n').filter(o => o.trim().length > 0)
+  let sites = text.toString().split(lineSep).filter(o => o.trim().length > 0)
   let hosts = []
   let len = sites.length
   for(let i=0; i<len; i++) {
@@ -100,8 +103,8 @@ async function queryConfigWebSite() {
     })
   }
   let tempFilePath = resolve(__dirname, 'temp.txt')
-  fs.writeFileSync(tempFilePath, hosts.join('\r\n'))
-  doFlushHost(hosts.join('\r\n'))
+  fs.writeFileSync(tempFilePath, hosts.join(lineSep))
+  doFlushHost(hosts.join(lineSep))
 }
 
 
