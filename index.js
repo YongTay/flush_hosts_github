@@ -96,8 +96,8 @@ async function queryConfigWebSite() {
     let site = sites[i]
     if(site.trim().length === 0) continue
     await queryWebSite(site).then(res => {
-      let ip = res.data.Ip
-      let t = res.data.Time
+      let ip = res.data && res.data.Ip
+      let t = res.data && res.data.Time
       hosts.push(`${ip}  ${site} #${t}`)
       console.log(`${i+1}/${len}  ${ip}  ${site} #time=${t}`)
     })
